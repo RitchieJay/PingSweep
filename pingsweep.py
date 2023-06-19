@@ -33,15 +33,12 @@ parser = argparse.ArgumentParser(
 
 
 parser.add_argument("-s", "--subnet", help="Subnet for sweeping")
+parser.add_argument("-o", "--output", help="output file name")
 
+
+args = parser.parse_args()
 
 if len(sys.argv) > 1:
-    for idx, arg in enumerate(sys.argv):
-        if arg in ("--subnet", "-s"):
-            subnet = str(sys.argv[idx + 1])
-        elif arg in ("--output", "-o"):
-            output_file = str(sys.argv[idx + 1])
-            
+    subnet = args.subnet
+    output_file = args.output
     ping_sweep(subnet)
-else:
-    pass
