@@ -50,6 +50,7 @@ parser = argparse.ArgumentParser(
 
 parser.add_argument("-s", "--subnet", help="Subnet for sweeping")
 parser.add_argument("-o", "--output", help="output file name")
+parser.add_argument("-v", "--verbose", help="Generates an output")
 
 
 args = parser.parse_args()
@@ -57,4 +58,8 @@ args = parser.parse_args()
 if len(sys.argv) > 1:
     subnet = args.subnet
     output_file = args.output
+
+    if args.verbose == True:
+        verbose = True
+
     ping_sweep(subnet)
