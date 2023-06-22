@@ -6,26 +6,42 @@ from ping3 import ping
 
 subnet = ''
 output_file = ''
+verbose = True
 
 
 def ping_sweep(subnet):
     network = ipaddress.ip_network(subnet, strict=False)
+    scan_ip(network)
 
-    with open(output_file, 'a') as f:
-        for ip in network.hosts():
-            ip_str = str(ip)
-            timestamp = datetime.datetime.now().strftime('%Y-%m-%d %H:%M:%S')
-            message = ""
-            try:
-                response_time = ping(ip_str, timeout=1)
-                if response_time is not None:
-                    message = f"{timestamp} - {ip_str} is reachable"
-                else:
-                    message = f"{timestamp} - {ip_str} is unreachable"
-            except Exception:
-                message = f"{timestamp} - Error pinging {ip_str}"
+
+def scan_ip(network):
+    for ip in network.hosts():
+        message = ""
+        message = compose(message, ip)
+        if verbose:
             print(message)
-            f.write(message + '\n')
+
+        try:
+            with open(output_file, 'a') as f:
+                f.write(message + '\n')
+        except:
+            pass
+
+
+def compose(msg, ip):
+    ip_str = str(ip)
+    timestamp = datetime.datetime.now().strftime('%Y-%m-%d %H:%M:%S')
+
+    try:
+        response_time = ping(ip_str, timeout=1)
+        if response_time is not None:
+            msg = f"{timestamp} - {ip_str} is reachable"
+        else:
+            msg = f"{timestamp} - {ip_str} is unreachable"
+    except Exception:
+        msg = f"{timestamp} - Error pinging {ip_str}"
+
+    return msg
 
 
 parser = argparse.ArgumentParser(
